@@ -1,0 +1,37 @@
+header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+  padding: 0 24px;
+  margin: 24px auto;
+  background-color: #7678ED;
+  border-radius: 8px;
+
+  a {
+    text-decoration: none;
+    cursor: auto;
+
+    h1 {
+      font-size: 3em;
+      color: #ffbc45;
+      cursor: pointer;
+    }
+  }
+
+  h2 {
+    margin: 0;
+    flex-grow: 1; 
+    text-align: center; 
+  }
+
+  div {
+    width: 105px;
+    text-align: end;
+
+    & img {
+      width: 76px;
+    }
+  }
+}

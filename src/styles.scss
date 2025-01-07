@@ -1,1 +1,36 @@
-/* You can add global styles to this file, and also import other style files */
+* {
+  box-sizing: border-box;
+}
+
+html, body { 
+  height: 100%; 
+}
+
+body { 
+  margin: 0; 
+  font-family: "Poppins", sans-serif; 
+  background-color: #3D348B;
+}
+
+h1, h2, h3, h4, p {
+  color: white;
+}
+
+// th, td {
+//   color: #3D348B;
+// }
+
+table {
+  width: 100%;
+}
+
+.mat-mdc-button {
+  z-index: 0;
+}
+
+// colorscheme
+// #ffbc45;
+// #F97070;
+// #69D6F4;
+// #3D348B;
+// #7678ED;

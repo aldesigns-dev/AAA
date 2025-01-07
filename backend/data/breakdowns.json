@@ -1,0 +1,26 @@
+[
+  {
+    "customer_id": 4650,
+    "moment_of_breakdown": "2024-12-30T23:00:00.000Z",
+    "description": "Auto geëxplodeerd op A2",
+    "breakdown_id": 4227
+  },
+  {
+    "customer_id": 8009,
+    "moment_of_breakdown": "2024-12-31T23:00:00.000Z",
+    "description": "Brandstof op",
+    "breakdown_id": 9460
+  },
+  {
+    "customer_id": 8009,
+    "moment_of_breakdown": "2025-01-02T23:00:00.000Z",
+    "description": "Motorolie op",
+    "breakdown_id": 9111
+  },
+  {
+    "customer_id": 6708,
+    "moment_of_breakdown": "2025-01-06T23:00:00.000Z",
+    "description": "Barst in ruit",
+    "breakdown_id": 3476
+  }
+]

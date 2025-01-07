@@ -1,0 +1,41 @@
+// nav {
+//   width: 90%;
+//   padding: 0;
+//   margin: 24px auto;
+//   background-color: #7678ED;
+//   border-radius: 8px;
+
+//   mat-nav-list, 
+//   .mat-mdc-list-base {
+//     display: flex;
+//     flex-direction: row;
+//     justify-content: space-evenly;
+//     margin-block-start: 0;
+//     margin-block-end: 0;
+
+//     mat-list-item {
+//       text-align: center;
+//       width: 25%;
+
+//       .mat-mdc-raised-button {
+//         padding: 22px 30px;
+//         color: #3D348B;
+//         background: #c9c9fe;
+//       }
+//     }
+//   }
+// }
+
+mat-toolbar.mat-toolbar.mat-toolbar-single-row {
+  width: 90%;
+  padding: 0;
+  margin: 24px auto;
+  background-color: #7678ED;
+  border-radius: 8px;
+  justify-content: space-evenly;
+}
+// .mat-mdc-raised-button {
+//   padding: 22px 30px;
+//   color: #3D348B;
+//   background: #c9c9fe;
+// }

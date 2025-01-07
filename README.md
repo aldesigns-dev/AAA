@@ -25,3 +25,28 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+
+## Leerdoelen Angular
+
+### 1. ng
+- **Material**: Toegepast op buttons, tables
+- **Reactive forms**:
+- **dependency Injection**:
+- **Services**:
+- **Components**:
+- **Templates**:
+- **Routing**:
+- **NG CLI**: 
+
+### 2. rxjs
+- **Pipelines**: 
+- **Observables**: In de add, edit en delete functies wordt er met `subscribe()` aangemeld voor updates van de observables. 
+- **Subjects**: 
+- **Operators**: `map()` operator in de service om het object te transformeren naar een array. `tap()` operator in de service voert een side-effect uit buiten de data stroom van de obervable zelf. 
+- **Error handling**:
+
+### 3. Jest
+- **Matchers**:
+- **Setup & Teardown**:
+- **Mocks**:

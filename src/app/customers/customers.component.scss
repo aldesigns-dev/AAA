@@ -1,0 +1,21 @@
+// .mat-mdc-raised-button {
+//   padding: 22px 30px;
+//   color: #3D348B;
+//   background: #c9c9fe;
+//   margin-bottom: 12px;
+// }
+
+.table-content-container {
+  padding: 24px;
+  background-color: #7678ED;
+  border-radius: 8px;
+
+  .mat-mdc-raised-button {
+    margin: 12px auto;
+  }
+
+  .mat-mdc-table {
+    width: 100%;
+    // background-color: #c9c9fe;
+  }
+}

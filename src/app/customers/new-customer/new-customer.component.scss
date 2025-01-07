@@ -1,0 +1,39 @@
+::ng-deep .mdc-dialog--open .mat-mdc-dialog-surface, .mdc-dialog--closing .mat-mdc-dialog-surface {
+  background-color: #c9c9fe;
+  padding: 24px;
+  width: 480px;
+}
+
+h2 {
+  color: #3D348B;
+  text-align: center;
+}
+
+p {
+  color: #3D348B;
+  text-align: center;
+  margin-bottom: 16px !important;
+}
+
+mat-dialog-content {
+  display: flex;
+  flex-direction: column;
+}
+
+button.submit-button {
+  padding: 22px 30px;
+  color: white; 
+  background: #3D348B;
+}
+
+button.cancel-button {
+  padding: 22px 30px;
+  color: #3D348B;
+  background: #c9c9fe; ;
+}
+
+button.delete-button {
+  padding: 22px 30px;
+  color: white;
+  background: #F97070;
+}
