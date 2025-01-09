@@ -7,20 +7,14 @@
   },
   {
     "customer_id": 8009,
-    "moment_of_breakdown": "2024-12-31T23:00:00.000Z",
-    "description": "Brandstof op",
+    "moment_of_breakdown": "2025-01-05T23:00:00.000Z",
+    "description": "Diesel getankt ipv benzine",
     "breakdown_id": 9460
   },
   {
-    "customer_id": 8009,
-    "moment_of_breakdown": "2025-01-02T23:00:00.000Z",
-    "description": "Motorolie op",
-    "breakdown_id": 9111
-  },
-  {
-    "customer_id": 6708,
-    "moment_of_breakdown": "2025-01-06T23:00:00.000Z",
-    "description": "Barst in ruit",
-    "breakdown_id": 3476
+    "customer_id": 3955,
+    "moment_of_breakdown": "2025-01-01T23:00:00.000Z",
+    "description": "Lekke band",
+    "breakdown_id": 2095
   }
 ]
