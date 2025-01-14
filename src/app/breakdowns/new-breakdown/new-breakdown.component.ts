@@ -31,9 +31,8 @@ export class NewBreakdownComponent implements OnInit {
   ngOnInit(): void {
     console.log('Dialog Data:', this.data);
     this.mode = this.data?.mode || 'add';
-    // Als edit mode actief is worden de breakdowngegevens gepatcht in het formulier.
+    // Als edit of delete mode actief is worden de breakdowngegevens gepatcht in het formulier.
     if (this.mode === 'edit' || this.mode === 'delete') {
-      console.log('Edit Breakdown Mode: patchValues:', this.data.breakdown);
       this.newBreakdownForm.patchValue({
         customer_id: this.data.breakdown.customer_id,
         moment_of_breakdown: this.data.breakdown.moment_of_breakdown,

@@ -39,11 +39,6 @@ export class BreakdownsComponent implements OnInit {
     const sortDirection = this.sortId(); // Sorteerrichting.
 
     return breakdowns.sort((a, b) => {
-      // if (sortDirection === 'desc') {
-      //   return a.customer_id > b.customer_id ? -1 : 1; // Sorteer aflopend.
-      // } else {
-      //   return a.customer_id > b.customer_id ? 1 : -1; // Sorteer oplopend.
-      // }
       return sortDirection === 'desc' ?  b.customer_id - a.customer_id :  a.customer_id -  b.customer_id;
     });
   });
@@ -57,14 +52,6 @@ export class BreakdownsComponent implements OnInit {
       const dateB = new Date(b.moment_of_breakdown).getTime(); 
       console.log(a.moment_of_breakdown, dateA);
 
-      // if (sortDirection === 'desc') {
-      //   // Als dateB groter is dan dateA, wordt een positief getal geretourneerd: b moet vóór a komen in de lijst.
-      //   return dateB - dateA;
-      // } else {
-      //   return dateA - dateB; 
-      // }
-
-      // condition ? value_if_true : value_if_false
       return sortDirection === 'desc' ? dateB - dateA : dateA - dateB;
     });
   }
@@ -89,11 +76,14 @@ export class BreakdownsComponent implements OnInit {
     });
 
     const subscriptionParams = this.activatedRoute.queryParams.subscribe({
+      // Callback functie wanneer er een update van queryParams is.
       next: (params) => {
+        // Als queryparameter sortId bevat, sorteer op Id.
         if (params['sortId']) {
           this.sortId.set(params['sortId']);
           this.dataSource.data = this.sortOnId();
         }
+        // Als queryparameter sortDate bevat, sorteer op Date.
         if (params['sortDate']) {
           this.sortDate.set(params['sortDate']);
           this.dataSource.data = this.sortOnDate();

@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DestroyRef } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
@@ -32,10 +31,6 @@ describe('CustomersComponent', () => {
               ]),
           },
         },
-        // {
-        //   provide: DestroyRef,
-        //   useValue: DestroyRef.onDestroy(),
-        // },
       ],
     }).compileComponents();
 
@@ -81,7 +76,7 @@ describe('CustomersComponent', () => {
       ]);
     });
 
-    it('should set params for sorting on ID and Name `default`', () => {
+    it('should set params for sorting on ID `default`', () => {
       expect(component.sortOnId()[0].customer_id).toBe(3);
       expect(component.sortOnId()[1].customer_id).toBe(2);
       expect(component.sortOnId()[2].customer_id).toBe(1);
@@ -104,7 +99,7 @@ describe('CustomersComponent', () => {
       ]);
     });
 
-    it('should set params for sorting on ID and Name `asc`', () => {
+    it('should set params for sorting on ID `asc`', () => {
       component.sortId.set('asc');
       expect(component.sortOnId()).toEqual([
         {
@@ -192,9 +187,13 @@ describe('CustomersComponent', () => {
     });
   });
 
-  // describe('onDestroy', () => {
-  //   it('should clean up subscriptions', () => {
-  //     component.ngOnDestroy();
-  //   });
-  // });
+  describe('onDestroy', () => {
+    it('should clean up subscriptions', () => {
+      const subscriptionCustomersSpy = jest.spyOn(component as any, 'unsubscribe');
+      const subscriptionParamsSpy = jest.spyOn(component as any, 'unsubscribe');
+
+      expect(subscriptionCustomersSpy).toHaveBeenCalled();
+      expect(subscriptionParamsSpy).toHaveBeenCalled();
+      });
+  });
 });

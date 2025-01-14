@@ -33,11 +33,6 @@ export class CustomersComponent implements OnInit {
     const sortDirection = this.sortId(); // Sorteerrichting.
 
     return customers.sort((a, b) => {
-      // if (sortDirection === 'desc') {
-      //   return a.customer_id > b.customer_id ? -1 : 1; // Sorteer aflopend.
-      // } else {
-      //   return a.customer_id > b.customer_id ? 1 : -1; // Sorteer oplopend.
-      // }
       return sortDirection === 'desc' ?  b.customer_id - a.customer_id :  a.customer_id -  b.customer_id;
     });
   });
@@ -46,13 +41,6 @@ export class CustomersComponent implements OnInit {
     const customers = this.customers(); // Lijst van customers.
     const sortDirection = this.sortName(); // Sorteerrichting.
     
-    // return customers.sort((a, b) => {
-    //   if (sortDirection === 'desc') {
-    //     return a.name.toLowerCase() > b.name.toLowerCase() ? -1 : 1; // Sorteer aflopend.
-    //   } else {
-    //     return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1; // Sorteer oplopend.
-    //   }
-    // });
     return customers.sort((a, b) => 
       sortDirection === 'desc' 
         ? b.name.toLowerCase().localeCompare(a.name.toLowerCase()) 
@@ -71,11 +59,14 @@ export class CustomersComponent implements OnInit {
     });
 
     const subscriptionParams = this.activatedRoute.queryParams.subscribe({
+      // Callback functie wanneer er een update van queryParams is.
       next: (params) => {
+        // Als queryparameter sortId bevat, sorteer op Id.
         if (params['sortId']) {
           this.sortId.set(params['sortId']);
           this.dataSource.data = this.sortOnId();
         }
+        // Als queryparameter sortName bevat, sorteer op Name.
         if (params['sortName']) {
           this.sortName.set(params['sortName']);
           this.dataSource.data = this.sortOnName();

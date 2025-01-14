@@ -30,21 +30,21 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 ## Leerdoelen Angular
 
 ### 1. ng
-- **Material**: Toegepast op buttons, tables
-- **Reactive forms**:
-- **dependency Injection**:
-- **Services**:
-- **Components**:
-- **Templates**:
-- **Routing**:
-- **NG CLI**: 
+- **Material**: Toegepast op het menu/toolbar, buttons, tables, dialogs en forms. 
+- **Reactive forms**: FormGroup geïnitiliseerd in de `new-customer.component` en `new-breakdown.component`. Ik gebruik Material Dialog in combinatie met Reactive forms om de ingevulde gegevens door te sturen. Tevens herbruik ik deze componenten (dialogs), naast het aanmaken, voor het wijzigen en verwijderen van data middels een "mode" property die wordt doorgegeven via de dialog data.
+- **Dependency Injection**: Met inject() worden er afhankelijkheden geïnjecteerd zoals de Angular services ActivatedRoute, DestroyRef en MatDialog maar ook eigen services zoals `customers.service`, `breakdowns.service`.
+- **Services**: Eigen services zoals de `customers.service`, `breakdowns.service` worden gebruikt om de logica en data te beheren. Hierin staan de methoden voor de CRUD operaties die via Angular's HttpClient communiceren met de backend.
+- **Components**: De applicatie bestaat uit meerdere (standalone) componenten. Dit zijn de bouwstenen van de UI.
+- **Templates**: De templates bestaan uit HTML en Angular specifieke syntax en bepalen hoe de componenten worden weergegeven in de UI.
+- **Routing**: Routes zijn gedefinieerd in `app.routes.ts`. Met routerLink zijn deze toegepast in bijv. de `menu-component`. Sorteren van data in de mat-tables gaat via de queryParams Observable die wordt geleverd door Angular's ActivatedRoute. De parameters worden weergegeven in de url. 
+- **NG CLI**: Voor het aanmaken van de componenten, en voor installaties zoals bijv. jest, is gebruik gemaakt van de CLI.
 
 ### 2. rxjs
-- **Pipelines**: 
-- **Observables**: In de add, edit en delete functies wordt er met `subscribe()` aangemeld voor updates van de observables. 
-- **Subjects**: 
-- **Operators**: `map()` operator in de service om het object te transformeren naar een array. `tap()` operator in de service voert een side-effect uit buiten de data stroom van de obervable zelf. 
-- **Error handling**:
+- **Pipelines**: In de `customers.component`, de `breakdowns.component` en de `services` maak ik gebruik van RxJS pipelines om de observable te transformeren of manipuleren met behulp van RxJS pipe().  
+- **Observables**: In o.a. de add, edit en delete functies wordt er met subscribe() aangemeld voor updates van de observables. 
+- **Subjects**: Udemy 201, 209, 210.
+- **Operators**: In bijv. de `customers.service` gebruik ik de map() operator om de Customers[] array uit het { customers: Customer[] } object te halen en de tap() operator om side-effects uit te voeren, zoials logging of updates, buiten de data stroom van de obervable zelf. 
+- **Error handling**: In de http-verzoeken worden mogelijke fouten afgevangen en gelogd. De validators in de formulieren richten zich op de gebruikersinvoer. 
 
 ### 3. Jest
 - **Matchers**:
