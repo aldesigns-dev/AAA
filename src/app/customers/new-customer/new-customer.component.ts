@@ -14,9 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 })
 export class NewCustomerComponent implements OnInit {
   newCustomerForm = new FormGroup({
-    name: new FormControl('', {
-      validators: [ Validators.required ]
-    }),
+    name: new FormControl('', Validators.required),
     city: new FormControl('', Validators.required)
   });
 

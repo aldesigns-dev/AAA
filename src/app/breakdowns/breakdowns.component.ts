@@ -99,7 +99,7 @@ export class BreakdownsComponent implements OnInit {
   }
 
   onAddBreakdown(): void {
-    // Open dialog in 'add' modus.
+    // Open dialog in 'add' mode.
     const dialogRef = this.dialog.open(NewBreakdownComponent, {
       data: { 
         mode: 'add',
@@ -136,7 +136,7 @@ export class BreakdownsComponent implements OnInit {
     console.log('Edit breakdown:', breakdownId);
     // Zoek de breakdown.
     const breakdown = this.breakdowns().find(b => b.breakdown_id === breakdownId);
-    // Open dialog in 'edit' modus.
+    // Open dialog in 'edit' mode.
     const dialogRef = this.dialog.open(NewBreakdownComponent, {
       data: { mode: 'edit', breakdown }
     });
@@ -167,7 +167,7 @@ export class BreakdownsComponent implements OnInit {
   onDeleteBreakdown(breakdownId: number): void {
     // Zoek de breakdown.
     const breakdown = this.breakdowns().find(b => b.breakdown_id === breakdownId);
-    // Open dialog in 'delete' modus.
+    // Open dialog in 'delete' mode.
     const dialogRef = this.dialog.open(NewBreakdownComponent, {
       data: { mode: 'delete', breakdown }
     });

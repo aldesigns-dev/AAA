@@ -81,7 +81,7 @@ export class CustomersComponent implements OnInit {
   }
 
   onAddCustomer(): void {
-    // Open dialog in 'add' modus.
+    // Open dialog in 'add' mode.
     const dialogRef = this.dialog.open(NewCustomerComponent, {
       data: { mode: 'add' }
     });
@@ -115,7 +115,7 @@ export class CustomersComponent implements OnInit {
     // Zoek de klant.
     const customer = this.customers().find(c => c.customer_id === customerId);
     console.log('Customer bewerken: ' + customerId);
-    // Open dialog in 'edit' modus.
+    // Open dialog in 'edit' mode.
     const dialogRef = this.dialog.open(NewCustomerComponent, {
       data: { mode: 'edit', customer }
     });
@@ -146,7 +146,7 @@ export class CustomersComponent implements OnInit {
   onDeleteCustomer(customerId: number): void {
     // Zoek de klant.
     const customer = this.customers().find(c => c.customer_id === customerId);
-    // Open dialog in 'delete' modus.
+    // Open dialog in 'delete' mode.
     const dialogRef = this.dialog.open(NewCustomerComponent, {
       data: { mode: 'delete', customer }
     });

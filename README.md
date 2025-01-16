@@ -41,10 +41,10 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ### 2. rxjs
 - **Pipelines**: In de `customers.component`, de `breakdowns.component` en de `services` maak ik gebruik van RxJS pipelines om de observable te transformeren of manipuleren met behulp van RxJS pipe().  
-- **Observables**: In o.a. de add, edit en delete functies wordt er met subscribe() aangemeld voor updates van de observables. 
+- **Observables**: In o.a. de get, add, edit en delete functies wordt er met subscribe() aangemeld voor updates van de observables. 
 - **Subjects**: Udemy 201, 209, 210.
 - **Operators**: In bijv. de `customers.service` gebruik ik de map() operator om de Customers[] array uit het { customers: Customer[] } object te halen en de tap() operator om side-effects uit te voeren, zoials logging of updates, buiten de data stroom van de obervable zelf. 
-- **Error handling**: In de http-verzoeken worden mogelijke fouten afgevangen en gelogd. De validators in de formulieren richten zich op de gebruikersinvoer. 
+- **Error handling**: In de http-verzoeken worden mogelijke fouten afgevangen en vooralsnog alleen gelogd. De validators in de formulieren richten zich op de gebruikersinvoer. 
 
 ### 3. Jest
 - **Matchers**:

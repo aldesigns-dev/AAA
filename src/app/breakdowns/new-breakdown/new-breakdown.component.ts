@@ -39,15 +39,14 @@ export class NewBreakdownComponent implements OnInit {
         description: this.data.breakdown.description,
       });
     } else {
-      console.log('New Breakdown Mode');
-      // Stel klantenlijst in voor aanmaakmode.
+      // Stel klantenlijst in voor add mode.
       if (this.data?.customers) {
         this.customers = this.data.customers;
         this.filteredCustomers = this.customers;
       }
     }
 
-    // Filter de klanten op basis van de invoer in het veld
+    // Filter de klanten op basis van de invoer in het veld.
     this.newBreakdownForm.get('customer_id')?.valueChanges.subscribe((value) => {
       const filterValue = typeof value === 'string' ? value.toLowerCase() : '';
       this.filteredCustomers = this.customers.filter((customer) =>

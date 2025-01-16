@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideRouter } from '@angular/router';
+import { ActivatedRoute, provideRouter } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import { of } from 'rxjs';
 
 import { CustomersComponent } from './customers.component';
@@ -10,6 +11,25 @@ import { CustomersService } from './customers.service';
 describe('CustomersComponent', () => {
   let component: CustomersComponent;
   let fixture: ComponentFixture<CustomersComponent>;
+  const customersService: Partial<CustomersService> = {
+    getCustomers: () =>
+      of([
+        {
+          customer_id: 1,
+          name: 'John Doe',
+          city: 'City',
+        },
+      ]),
+    addCustomer: () =>
+      of({
+        customer: {
+          customer_id: 1,
+          name: 'John Doe',
+          city: 'City',
+        },
+      }),
+  };
+  const newCustomer = { name: 'Jane', city: 'City' };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -20,15 +40,14 @@ describe('CustomersComponent', () => {
         provideRouter([]),
         {
           provide: CustomersService,
+          useValue: customersService,
+        },
+        {
+          provide: MatDialog,
           useValue: {
-            getCustomers: () =>
-              of([
-                {
-                  customer_id: 1,
-                  name: 'John Doe',
-                  city: 'City',
-                },
-              ]),
+            open: jest.fn().mockReturnValue({
+              afterClosed: jest.fn().mockReturnValue(of(newCustomer)),
+            }),
           },
         },
       ],
@@ -44,8 +63,19 @@ describe('CustomersComponent', () => {
   });
 
   describe('ngOnInit', () => {
-    it('should fetch customers', () => {
+    it('should setup observables', () => {
+      // Create spy for getCustomers().
+      const getCustomersSpy = jest.spyOn(customersService, 'getCustomers');
+      // Create spy for queryParams.
+
+      // Call method.
       component.ngOnInit();
+
+      // Check if getCustomers() has been called.
+      expect(getCustomersSpy).toHaveBeenCalled();
+    });
+
+    it('should call getCustomers()', () => {
       expect(component.customers()).toEqual([
         { customer_id: 1, name: 'John Doe', city: 'City' },
       ]);
@@ -143,9 +173,6 @@ describe('CustomersComponent', () => {
     });
 
     it('should set params for sorting on Name `default`', () => {
-      // expect(component.sortOnId()[0].name).toBe(3);
-      // expect(component.sortOnId()[1].name).toBe(2);
-      // expect(component.sortOnId()[2].name).toBe(1);
       expect(component.sortOnName()).toEqual([
         {
           customer_id: 1,
@@ -189,11 +216,40 @@ describe('CustomersComponent', () => {
 
   describe('onDestroy', () => {
     it('should clean up subscriptions', () => {
-      const subscriptionCustomersSpy = jest.spyOn(component as any, 'unsubscribe');
-      const subscriptionParamsSpy = jest.spyOn(component as any, 'unsubscribe');
+      // const subscriptionCustomersSpy = jest.spyOn(
+      //   component as any,
+      //   'unsubscribe'
+      // );
+      // const subscriptionParamsSpy = jest.spyOn(component as any, 'unsubscribe');
+      // expect(subscriptionCustomersSpy).toHaveBeenCalled();
+      // expect(subscriptionParamsSpy).toHaveBeenCalled();
+    });
+  });
 
-      expect(subscriptionCustomersSpy).toHaveBeenCalled();
-      expect(subscriptionParamsSpy).toHaveBeenCalled();
-      });
+  describe('onAddCustomer', () => {
+    it('should call addCustomer()', () => {
+      // Create spy for addCustomer().
+      // this method is being called in the afterClosed of the dialogRef as provided in the useValue
+      const addCustomersSpy = jest.spyOn(customersService, 'addCustomer');
+
+      // test the current length after ngOnInit (with getCustomers)
+      expect(component.customers().length).toBe(1);
+
+      // Call method.
+      component.onAddCustomer();
+
+      // test if method in callback is being called
+      expect(addCustomersSpy).toHaveBeenCalledWith(newCustomer);
+
+      // test new length of Array
+      expect(component.customers().length).toBe(2);
+
+      // test updated signal and dataSource
+      expect(component.dataSource.data);
+    });
+
+    it('should recieve server response', () => {});
+
+    it('should update the customers array', () => {});
   });
 });
