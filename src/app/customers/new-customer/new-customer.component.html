@@ -1,42 +1,55 @@
 <h2 mat-dialog-title>
-  @if (mode === 'delete') {
-    Klant Verwijderen
-  } @else if (mode === 'edit') {
-    Klant Bewerken
-  } @else {
-    Nieuwe Klant
-  }
+  <!-- YH: use the existence of an id on the customer, instead of the value of mode -->
+  @if (mode === 'delete') { Klant Verwijderen } @else if (mode === 'edit') {
+  Klant Bewerken } @else { Nieuwe Klant }
 </h2>
+<!-- YH: The component is about a form, if you hide it incase of 'delete', the delete functionality should be somewhere else -->
 @if (mode !== 'delete') {
-  <form [formGroup]="newCustomerForm">
-    <mat-dialog-content>
-      <mat-form-field>
-        <mat-label>Naam</mat-label>
-        <input matInput type="text" formControlName="name"/>
-        @if (fieldIsInvalid('name')) {
-          <mat-error>Naam is verplicht</mat-error>
-        }
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Woonplaats</mat-label>
-        <input matInput type="text" formControlName="city"/>
-        @if (fieldIsInvalid('city')) {
-          <mat-error>Woonplaats is verplicht</mat-error>
-        }
-      </mat-form-field>
-    </mat-dialog-content>
-  </form>
-} @else {
+<form [formGroup]="newCustomerForm">
+  <!-- YH: <mat-dialog-content> is unnecessarily defined twice -->
   <mat-dialog-content>
-    <p>Weet je zeker dat je deze klant wilt verwijderen?</p>
+    <mat-form-field>
+      <mat-label>Naam</mat-label>
+      <input matInput type="text" formControlName="name" />
+      <!-- YH: check for the error required, instead of generic invalidness -->
+      @if (fieldIsInvalid('name')) {
+      <mat-error>Naam is verplicht</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Woonplaats</mat-label>
+      <input matInput type="text" formControlName="city" />
+      <!-- YH: check for the error required, instead of generic invalidness -->
+      @if (fieldIsInvalid('city')) {
+      <mat-error>Woonplaats is verplicht</mat-error>
+      }
+    </mat-form-field>
   </mat-dialog-content>
+</form>
+} @else {
+<mat-dialog-content>
+  <p>Weet je zeker dat je deze klant wilt verwijderen?</p>
+</mat-dialog-content>
 }
 
 <mat-dialog-actions>
   <button mat-button class="cancel-button" mat-dialog-close>Annuleren</button>
   @if (mode === 'delete') {
-    <button mat-button class="delete-button" [mat-dialog-close]="{ confirmDelete: true }">Verwijderen</button>
+  <button
+    mat-button
+    class="delete-button"
+    [mat-dialog-close]="{ confirmDelete: true }"
+  >
+    Verwijderen
+  </button>
   } @else {
-    <button mat-button class="submit-button" [disabled]="newCustomerForm.invalid" [mat-dialog-close]="customer">Opslaan</button>
+  <button
+    mat-button
+    class="submit-button"
+    [disabled]="newCustomerForm.invalid"
+    [mat-dialog-close]="customer"
+  >
+    Opslaan
+  </button>
   }
 </mat-dialog-actions>

@@ -1,4 +1,23 @@
 <mat-toolbar>
-  <button mat-raised-button aria-label="Breakdowns" routerLink="/breakdowns" routerLinkActive="active-link">Breakdowns</button>
-  <button mat-raised-button aria-label="Customers" routerLink="/customers" routerLinkActive="active-link">Customers</button>
+  <!--
+    Both the buttons are hardcoded and therefore repetative: create a property in the Component that is looped through in the template
+    When you declare a link active, the others should not be active
+    The routerLink is hardcoded, take this from an enum
+  -->
+  <button
+    mat-raised-button
+    aria-label="Breakdowns"
+    [routerLink]="[routePaths.Breakdowns]"
+    routerLinkActive="active-link"
+  >
+    Breakdowns
+  </button>
+  <button
+    mat-raised-button
+    aria-label="Customers"
+    routerLink="/customers"
+    routerLinkActive="active-link"
+  >
+    Customers
+  </button>
 </mat-toolbar>

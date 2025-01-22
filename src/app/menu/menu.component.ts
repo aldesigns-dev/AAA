@@ -3,7 +3,7 @@ import { RouterLink } from '@angular/router';
 import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
-
+import { RoutePath } from '../app.routes';
 
 @Component({
   selector: 'app-menu',
@@ -11,8 +11,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
   imports: [RouterLink, MatListModule, MatButtonModule, MatToolbarModule],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.scss',
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class MenuComponent {
-
+  routePaths = RoutePath;
 }

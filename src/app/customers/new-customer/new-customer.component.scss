@@ -1,16 +1,18 @@
-::ng-deep .mdc-dialog--open .mat-mdc-dialog-surface, .mdc-dialog--closing .mat-mdc-dialog-surface {
+// YH: there is no need to use ng:deep, solve this globally
+::ng-deep .mdc-dialog--open .mat-mdc-dialog-surface,
+.mdc-dialog--closing .mat-mdc-dialog-surface {
   background-color: #c9c9fe;
   padding: 24px;
   width: 480px;
 }
 
 h2 {
-  color: #3D348B;
+  color: #3d348b;
   text-align: center;
 }
 
 p {
-  color: #3D348B;
+  color: #3d348b;
   text-align: center;
   margin-bottom: 16px !important;
 }
@@ -22,18 +24,19 @@ mat-dialog-content {
 
 button.submit-button {
   padding: 22px 30px;
-  color: white; 
-  background: #3D348B;
+  color: white;
+  background: #3d348b;
 }
 
 button.cancel-button {
   padding: 22px 30px;
-  color: #3D348B;
-  background: #c9c9fe; ;
+  color: #3d348b;
+  // YH: there is an extra semicolon here. a linter (SonarQube) would have caught this
+  background: #c9c9fe;
 }
 
 button.delete-button {
   padding: 22px 30px;
   color: white;
-  background: #F97070;
+  background: #f97070;
 }
