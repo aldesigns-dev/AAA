@@ -1,0 +1,31 @@
+<h2 mat-dialog-title>
+  @if (mode === 'update') {
+    Klant Bewerken
+  } @else {
+    Nieuwe Klant
+  }
+</h2>
+
+<form [formGroup]="dialogCustomerForm">
+  <mat-dialog-content>
+    <mat-form-field>
+      <mat-label>Naam</mat-label>
+      <input matInput type="text" formControlName="name"/>
+      @if (fieldIsInvalid('name')) {
+        <mat-error>Naam is verplicht</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Woonplaats</mat-label>
+      <input matInput type="text" formControlName="city"/>
+      @if (fieldIsInvalid('city')) {
+        <mat-error>Woonplaats is verplicht</mat-error>
+      }
+    </mat-form-field>
+  </mat-dialog-content>
+</form>
+
+<mat-dialog-actions>
+  <button mat-button class="cancel-button" mat-dialog-close>Annuleren</button>
+  <button mat-button class="submit-button" [disabled]="dialogCustomerForm.invalid" [mat-dialog-close]="customer">Opslaan</button>
+</mat-dialog-actions>

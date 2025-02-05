@@ -18,7 +18,7 @@ export class BreakdownsService {
       );
   }
 
-  addBreakdown(breakdownData: {moment_of_breakdown: string, description: string, breakdown_id: number}) {
+  addBreakdown(breakdownData: {moment_of_breakdown: Date, description: string, breakdown_id: number}) {
     const newBreakdown = {
       ...breakdownData,
     };
@@ -38,21 +38,7 @@ export class BreakdownsService {
       );
   }
 
-  // editBreakdown(breakdownId: number, updatedData: { moment_of_breakdown: string, description: string }) {
-  //   const updatedBreakdown = { ...updatedData, breakdown_id: breakdownId };
-  //   return this.httpClient.put(`http://localhost:3000/breakdowns/${breakdownId}`, updatedBreakdown)
-  //     .pipe(
-  //       tap(() => {
-  //         this.breakdowns.update((oldBreakdowns) => 
-  //           oldBreakdowns.map(breakdown =>
-  //             breakdown.breakdown_id === breakdownId ? updatedBreakdown : breakdown
-  //           )
-  //         );
-  //       })
-  //     );
-  // }
-
-  editBreakdown(breakdownId: number, updatedData: { moment_of_breakdown: string, description: string }) {
+  updateBreakdown(breakdownId: number, updatedData: { moment_of_breakdown: string, description: string }) {
     return this.httpClient.put<Breakdown>(`http://localhost:3000/breakdowns/${breakdownId}`, updatedData)
       .pipe(
         tap((updatedBreakdown) => {

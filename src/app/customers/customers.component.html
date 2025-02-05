@@ -6,8 +6,8 @@
       <th mat-header-cell *matHeaderCellDef>Klant ID
         <a mat-icon-button 
           routerLink="./" 
-          [queryParams]="{ sortId: sortId() === 'asc' ? 'desc' : 'asc' }">
-          <mat-icon>{{ sortId() === 'asc' ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+          [queryParams]="{ column: 'customer_id', sort: ascOrDesc }">
+          <mat-icon>{{ column() === 'customer_id' ? ascOrDesc === 'asc' ? 'expand_less' : 'expand_more' : 'unfold_more' }}</mat-icon>
         </a>
       </th>
       <td mat-cell *matCellDef="let element">{{ element.customer_id }}</td>
@@ -17,8 +17,8 @@
       <th mat-header-cell *matHeaderCellDef>Naam
         <a mat-icon-button 
           routerLink="./" 
-          [queryParams]="{ sortName: sortName() === 'asc' ? 'desc' : 'asc' }">
-          <mat-icon>{{ sortName() === 'asc' ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+          [queryParams]="{ column: 'name', sort: ascOrDesc }">
+          <mat-icon>{{ column() === 'name' ? ascOrDesc === 'asc' ? 'expand_less' : 'expand_more' : 'unfold_more' }}</mat-icon>
         </a>
       </th>
       <td mat-cell *matCellDef="let element">{{ element.name }}</td>
@@ -29,10 +29,10 @@
       <td mat-cell *matCellDef="let element">{{ element.city }}</td>
     </ng-container>
 
-    <ng-container matColumnDef="edit">
+    <ng-container matColumnDef="update">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let element">
-        <button mat-icon-button aria-label="Edit" (click)="onEditCustomer(element.customer_id)">
+        <button mat-icon-button aria-label="Update" (click)="onUpdateCustomer(element.customer_id)">
           <mat-icon>edit</mat-icon>
         </button>
       </td>

@@ -1,14 +1,19 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { Customer } from './customer.model';
 import { CustomersService } from './customers.service';
-import { NewCustomerComponent } from './new-customer/new-customer.component';
+import { DialogCustomerFormComponent } from '../dialogs/dialog-customer-form/dialog-customer-form.component';
+import { DialogModeEnum } from '../enums/dialog-mode.enum';
+import { DialogConfirmComponent } from '../dialogs/dialog-confirm/dialog-confirm.component';
 
+@UntilDestroy()
 @Component({
   selector: 'app-customers',
   standalone: true,
@@ -18,158 +23,131 @@ import { NewCustomerComponent } from './new-customer/new-customer.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomersComponent implements OnInit {
-  private customersService = inject(CustomersService);
-  private destroyRef = inject(DestroyRef);
-  private activatedRoute = inject(ActivatedRoute)
-  readonly dialog = inject(MatDialog);
-  customers = signal<Customer[]>([]); // Signal waarmee klantenlijst wordt beheerd.
-  sortId = signal<'asc' | 'desc'>('desc');
-  sortName = signal<'asc' | 'desc'>('desc');
-  displayedColumns: string[] = ['customer_id', 'name', 'city', 'edit', 'delete'];
-  dataSource = new MatTableDataSource<Customer>(); // Weergave klantgegevens in de tabel.
+  private readonly activatedRoute = inject(ActivatedRoute)
+  private readonly customersService = inject(CustomersService);
+  private readonly dialog = inject(MatDialog);
+  private readonly snackBar = inject(MatSnackBar);
+  dataSource = new MatTableDataSource<Customer>(); 
+  displayedColumns: string[] = ['customer_id', 'name', 'city', 'update', 'delete'];
+  column = signal<'customer_id' | 'name' | undefined>('customer_id');
+  sort = signal<'asc' | 'desc' | undefined>('desc');
 
-  sortOnId = computed(() => {
-    const customers = this.customers(); // Lijst van customers.
-    const sortDirection = this.sortId(); // Sorteerrichting.
-
-    return customers.sort((a, b) => {
-      return sortDirection === 'desc' ?  b.customer_id - a.customer_id :  a.customer_id -  b.customer_id;
-    });
+  sortDirection = computed(() => {
+    const customers = this.dataSource.data;
+    if (this.column() === 'customer_id') {
+      return customers.sort((a, b) => {
+        return this.sort() === 'desc' ? b.customer_id - a.customer_id : a.customer_id - b.customer_id;
+      });
+    }
+    if (this.column() === 'name') {
+      return customers.sort((a, b) => {
+        return this.sort() === 'desc' ? b.name.toLowerCase().localeCompare(a.name.toLowerCase()) : a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+      });
+    }
+    return customers;
   });
 
-  sortOnName = computed(() => {
-    const customers = this.customers(); // Lijst van customers.
-    const sortDirection = this.sortName(); // Sorteerrichting.
-    
-    return customers.sort((a, b) => 
-      sortDirection === 'desc' 
-        ? b.name.toLowerCase().localeCompare(a.name.toLowerCase()) 
-        : a.name.toLowerCase().localeCompare(b.name.toLowerCase())
-    );
-  });
+  get ascOrDesc(): 'asc' | 'desc' {
+    return this.sort() === 'asc' ? 'desc' : 'asc';
+  }
 
   ngOnInit() {
-    const subscriptionCustomers = this.customersService.getCustomers().subscribe({
+    this.customersService.getCustomers().pipe(untilDestroyed(this)).subscribe({
       next: (customers) => {
-        console.log('Customers:', customers);
-        this.customers.set(customers); // Update de signal.
-        this.dataSource.data = customers; // Update de MatTableDataSource.
-      },
-      error: (err) => console.error('Fout bij ophalen klanten:', err),
+        this.dataSource.data = customers; 
+      }
     });
-
-    const subscriptionParams = this.activatedRoute.queryParams.subscribe({
-      // Callback functie wanneer er een update van queryParams is.
+    this.activatedRoute.queryParams.pipe(untilDestroyed(this)).subscribe({
       next: (params) => {
-        // Als queryparameter sortId bevat, sorteer op Id.
-        if (params['sortId']) {
-          this.sortId.set(params['sortId']);
-          this.dataSource.data = this.sortOnId();
-        }
-        // Als queryparameter sortName bevat, sorteer op Name.
-        if (params['sortName']) {
-          this.sortName.set(params['sortName']);
-          this.dataSource.data = this.sortOnName();
-        }
+        this.column.set(params['column']);
+        this.sort.set(params['sort']);
+        this.dataSource.data = this.sortDirection();
       }
-    });
-
-    this.destroyRef.onDestroy(() => {
-      subscriptionCustomers.unsubscribe();
-      subscriptionParams.unsubscribe();
     });
   }
 
-  onAddCustomer(): void {
-    // Open dialog in 'add' mode.
-    const dialogRef = this.dialog.open(NewCustomerComponent, {
-      data: { mode: 'add' }
+  onAddCustomer() {
+    const dialogRef = this.dialog.open(DialogCustomerFormComponent, {
+      data: { mode: DialogModeEnum.Add }
     });
-    
-    dialogRef.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed().pipe(untilDestroyed(this)).subscribe((result) => {
       if (result) {
-        const newCustomer = {
-          ...result,
-        };
-        console.log('Data naar server:', newCustomer); 
-        // Voeg klant toe via de service.
-        const subscription = this.customersService.addCustomer(newCustomer).subscribe({
-          next: (response) => {
-            const addedCustomer = response.customer;
-            // Update de klantenlijst in de signal en dataSource.
-            this.customers.update(oldCustomers => [...oldCustomers, addedCustomer]);
-            this.dataSource.data = this.customers();
-            console.log('Customer toegevoegd:', addedCustomer);
-          },
-          error: (err) => console.error('Fout bij toevoegen klant:', err),
-        });
-
-        this.destroyRef.onDestroy(() => {
-          subscription.unsubscribe();
-        });
+        this.addCustomer(result);
       }
     });
   }
 
-  onEditCustomer(customerId: number): void {
-    // Zoek de klant.
-    const customer = this.customers().find(c => c.customer_id === customerId);
-    console.log('Customer bewerken: ' + customerId);
-    // Open dialog in 'edit' mode.
-    const dialogRef = this.dialog.open(NewCustomerComponent, {
-      data: { mode: 'edit', customer }
+  private addCustomer(newCustomer: Customer) {
+    this.customersService.addCustomer(newCustomer).pipe(untilDestroyed(this)).subscribe({
+      next: (response) => this.addCustomerToDataSource(response.customer),
+      error: (err) => {
+        console.error('Fout bij het toevoegen van de klant:', err),
+        this.snackBar.open('Fout bij het toevoegen van de klant.', 'Sluiten', { duration: 3000 });
+      }
     });
+  }
 
-    dialogRef.afterClosed().subscribe((result) => {
+  private addCustomerToDataSource(addedCustomer: Customer) {
+    this.dataSource.data = [...this.dataSource.data, addedCustomer];
+    this.snackBar.open('Klant succesvol toegevoegd.', 'Sluiten', { duration: 3000 });
+  }
+
+  onUpdateCustomer(customerId: number) {
+    const customer = this.dataSource.data.find(c => c.customer_id === customerId);
+    const dialogRef = this.dialog.open(DialogCustomerFormComponent, {
+      data: { mode: DialogModeEnum.Update, customer }
+    });
+    dialogRef.afterClosed().pipe(untilDestroyed(this)).subscribe((result) => {
       if (result) {
-        const subscription = this.customersService.editCustomer(customerId, result).subscribe({
-          next: () => {
-            // Klantgegevens bijwerken in de lijst en dataSource.
-            const updatedCustomers = this.customers().map(c =>
-              c.customer_id === customerId ? { ...c, ...result } : c
-            );
-            // Update de signal en de dataSource.
-            this.customers.set(updatedCustomers);
-            this.dataSource.data = updatedCustomers;
-            console.log('Customer bijgewerkt:', result);
-          },
-          error: (err) => console.error('Fout bij updaten klant:', err),
-        });
-        
-        this.destroyRef.onDestroy(() => {
-          subscription.unsubscribe();
-        });
+        this.updateCustomer(customerId, result);
       }
     });
   }
 
-  onDeleteCustomer(customerId: number): void {
-    // Zoek de klant.
-    const customer = this.customers().find(c => c.customer_id === customerId);
-    // Open dialog in 'delete' mode.
-    const dialogRef = this.dialog.open(NewCustomerComponent, {
-      data: { mode: 'delete', customer }
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result?.confirmDelete) {
-        // Na bevestiging klant verwijderen.
-        const subscription = this.customersService.deleteCustomer(customerId).subscribe({
-          next: () => {
-            // Verwijder de klant uit de lijst.
-            const updatedCustomers = this.customers().filter(c => c.customer_id !== customerId);
-            // Update de signal en de dataSource.
-            this.customers.set(updatedCustomers);
-            this.dataSource.data = updatedCustomers;
-            console.log('Customer verwijderd:', customerId);
-          },
-          error: (err) => console.error('Fout bij verwijderen klant:', err),
-        });
-  
-        this.destroyRef.onDestroy(() => {
-          subscription.unsubscribe();
-        });
+  private updateCustomer(customerId: number, updatedCustomer: any) {
+    this.customersService.updateCustomer(customerId, updatedCustomer).pipe(untilDestroyed(this)).subscribe({
+      next: () => this.updateCustomerInDataSource(customerId, updatedCustomer),
+      error: (err) => {
+        console.error('Fout bij het bewerken van de klant:', err),
+        this.snackBar.open('Fout bij het bijwerken van de klant.', 'Sluiten', { duration: 3000 });
       }
     });
+  }
+
+  private updateCustomerInDataSource(customerId: number, updatedCustomer: any) {
+    this.dataSource.data = this.dataSource.data.map(c =>
+      c.customer_id === customerId ? { ...c, ...updatedCustomer } : c
+    );
+    this.snackBar.open('Klant succesvol bijgewerkt.', 'Sluiten', { duration: 3000 });
+  }
+
+  onDeleteCustomer(customerId: number) {
+    const dialogRef = this.dialog.open(DialogConfirmComponent, {
+      data: { source: 'customers', customerId }
+    });
+    dialogRef.afterClosed().pipe(untilDestroyed(this)).subscribe((confirmDelete) => {
+      if (confirmDelete) {
+        this.deleteCustomer(customerId);
+      }
+    });
+  }
+
+  private deleteCustomer(customerId: number) {
+    this.customersService.deleteCustomer(customerId).pipe(untilDestroyed(this)).subscribe({
+      next: () => this.removeCustomerFromDataSource(customerId),
+      error: (err) => {
+        console.error('Fout bij het verwijderen van de klant:', err),
+        this.snackBar.open('Fout bij het verwijderen van de klant.', 'Sluiten', { duration: 3000 });
+      }
+    })
+  }
+
+  private removeCustomerFromDataSource(customerId: number) {
+    this.dataSource.data = this.dataSource.data.filter(c => c.customer_id !== customerId);
+    this.snackBar.open('Klant succesvol verwijderd.', 'Sluiten', { duration: 3000 });
+  }
+
+  ngOnDestroy(): void {
+    console.log('CustomersComponent destroyed. Subscriptions opgeruimd.');
   }
 }

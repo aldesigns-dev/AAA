@@ -38,7 +38,7 @@ export class CustomersService {
       );
   }
 
-  editCustomer(customerId: number, updatedData: { name: string, city: string }) {
+  updateCustomer(customerId: number, updatedData: { name: string, city: string }) {
     const updatedCustomer = { ...updatedData, customer_id: customerId };
     return this.httpClient.put(`http://localhost:3000/customers/${customerId}`, updatedCustomer)
       .pipe(
