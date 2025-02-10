@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
 import { DialogModeEnum } from '../../enums/dialog-mode.enum';
+import { DialogCustomerData } from './dialog-customer-form-interface';
 
 @Component({
   selector: 'app-dialog-customer-form',
@@ -15,7 +16,7 @@ import { DialogModeEnum } from '../../enums/dialog-mode.enum';
   styleUrl: './dialog-customer-form.component.scss'
 })
 export class DialogCustomerFormComponent implements OnInit {
-  private readonly data = inject(MAT_DIALOG_DATA); 
+  private readonly data = inject<DialogCustomerData>(MAT_DIALOG_DATA); 
   mode: DialogModeEnum = DialogModeEnum.Add;
 
   dialogCustomerForm = new FormGroup({
@@ -23,17 +24,13 @@ export class DialogCustomerFormComponent implements OnInit {
     city: new FormControl('', Validators.required)
   });
 
-  get customer() {
-    return this.dialogCustomerForm.value;
-  }
-
   ngOnInit(): void {
-    this.mode = this.data?.mode || DialogModeEnum.Add;
+    this.mode = this.data.mode;
 
     if (this.mode === DialogModeEnum.Update) {
       this.dialogCustomerForm.patchValue({
-        name: this.data.customer.name,
-        city: this.data.customer.city
+        name: this.data.customer?.name,
+        city: this.data.customer?.city
       });
     }
   }

@@ -13,9 +13,14 @@
       <td mat-cell *matCellDef="let element">{{ element.customer_id }}</td>
     </ng-container>
 
-    <ng-container matColumnDef="breakdown_id">
-      <th mat-header-cell *matHeaderCellDef>Breakdown ID</th>
-      <td mat-cell *matCellDef="let element">{{ element.breakdown_id }}</td>
+    <ng-container matColumnDef="car_model">
+      <th mat-header-cell *matHeaderCellDef>Automerk</th>
+      <td mat-cell *matCellDef="let element">{{ element.car_model }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="license_number">
+      <th mat-header-cell *matHeaderCellDef>Kenteken</th>
+      <td mat-cell *matCellDef="let element">{{ element.license_number }}</td>
     </ng-container>
     
     <ng-container matColumnDef="moment_of_breakdown">

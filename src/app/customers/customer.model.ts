@@ -3,3 +3,8 @@ export interface Customer {
   name: string;
   city: string;
 }
+
+export interface CustomerInput {
+  name: string;
+  city: string;
+}

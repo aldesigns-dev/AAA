@@ -7,9 +7,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { DialogModeEnum } from '../../enums/dialog-mode.enum';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { DialogBreakdownData } from './dialog-breakdown-form-interface';
 
 @UntilDestroy()
 @Component({
@@ -21,12 +22,14 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
   styleUrl: './dialog-breakdown-form.component.scss'
 })
 export class DialogBreakdownFormComponent implements OnInit {
-  private readonly data = inject(MAT_DIALOG_DATA);
+  private readonly data = inject<DialogBreakdownData>(MAT_DIALOG_DATA);
   mode: DialogModeEnum = DialogModeEnum.Add;
   customers: { customer_id: number; name: string }[] = [];
 
   dialogBreakdownForm = new FormGroup({
-    customer_id: new FormControl('', Validators.required),
+    customer_id: new FormControl<number|null>(null, Validators.required),
+    car_model: new FormControl('', Validators.required),
+    license_number: new FormControl('', Validators.required),
     moment_of_breakdown: new FormControl('', Validators.required),
     description: new FormControl('', Validators.required)
   });
@@ -42,9 +45,12 @@ export class DialogBreakdownFormComponent implements OnInit {
     if (this.mode === DialogModeEnum.Update) {
       this.dialogBreakdownForm.patchValue({
         customer_id: this.data.breakdown.customer_id,
+        car_model: this.data.breakdown.car_model,
+        license_number: this.data.breakdown.license_number,
         moment_of_breakdown: this.data.breakdown.moment_of_breakdown,
         description: this.data.breakdown.description
       });
+      this.dialogBreakdownForm.get('customer_id')?.disable();
     }
 
     this.dialogBreakdownForm.get('customer_id')?.valueChanges.pipe(untilDestroyed(this)).subscribe((value) => {

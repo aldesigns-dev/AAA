@@ -8,13 +8,14 @@ import { DatePipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-import { Breakdown } from './breakdown.model';
+import { Breakdown, BreakdownInput } from './breakdown.model';
 import { Customer } from '../customers/customer.model';
 import { BreakdownsService } from './breakdowns.service';
 import { CustomersService } from '../customers/customers.service';
 import { DialogBreakdownFormComponent } from '../dialogs/dialog-breakdown-form/dialog-breakdown-form.component'; 
 import { DialogModeEnum } from '../enums/dialog-mode.enum';
 import { DialogConfirmComponent } from '../dialogs/dialog-confirm/dialog-confirm.component';
+import { DialogBreakdownData, DialogBreakdownResponse } from '../dialogs/dialog-breakdown-form/dialog-breakdown-form-interface';
 
 @UntilDestroy()
 @Component({
@@ -33,7 +34,7 @@ export class BreakdownsComponent implements OnInit {
   private readonly snackBar = inject(MatSnackBar);
   dataSourceB = new MatTableDataSource<Breakdown>(); 
   dataSourceC = new MatTableDataSource<Customer>(); 
-  displayedColumns: string[] = ['customer_id', 'breakdown_id', 'moment_of_breakdown', 'description', 'update', 'delete'];
+  displayedColumns: string[] = ['customer_id', 'car_model', 'license_number', 'moment_of_breakdown', 'description', 'update', 'delete'];
   column = signal<'customer_id' | 'moment_of_breakdown' | undefined>('customer_id');
   sort = signal<'asc' | 'desc' | undefined>('desc');
 
@@ -83,17 +84,17 @@ export class BreakdownsComponent implements OnInit {
   }
 
   onAddBreakdown() {
-    const dialogRef = this.dialog.open(DialogBreakdownFormComponent, {
+    const dialogRef = this.dialog.open<DialogBreakdownFormComponent, DialogBreakdownData, DialogBreakdownResponse>(DialogBreakdownFormComponent, {
       data: { mode: DialogModeEnum.Add, customers: this.dataSourceC.data }
     });
     dialogRef.afterClosed().pipe(untilDestroyed(this)).subscribe((result) => {
       if (result) {
-        this.addBreakdown(result);
+        this.addBreakdown(result.breakdown);
       }
     });
   }
 
-  private addBreakdown(newBreakdown: Breakdown) {
+  private addBreakdown(newBreakdown: BreakdownInput) {
     this.breakdownsService.addBreakdown(newBreakdown).pipe(untilDestroyed(this)).subscribe({
       next: (response) => this.addBreakdownToDataSource(response.breakdown),
       error: (err) => {

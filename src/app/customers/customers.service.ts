@@ -2,7 +2,7 @@ import { inject, Injectable, signal } from "@angular/core";
 import { HttpClient } from '@angular/common/http';
 import { map, tap } from "rxjs";
 
-import { Customer } from "./customer.model";
+import { Customer, CustomerInput } from "./customer.model";
 
 @Injectable({
   providedIn: 'root'
@@ -18,18 +18,14 @@ export class CustomersService {
       );
   }
 
-  addCustomer(customerData: {name: string, city: string, customer_id: number}) {
-    const newCustomer = {
-      ...customerData,
-    };
-    console.log('Data verzonden naar server:', newCustomer);
-    return this.httpClient.post<{ customer: Customer }>('http://localhost:3000/customers', newCustomer)
+  addCustomer(customerData: CustomerInput) {
+    console.log('Data verzonden naar server:', customerData);
+    return this.httpClient.post<{ customer: Customer }>('http://localhost:3000/customers', customerData)
       .pipe(
         tap({
           next: (response) => {
             console.log('Response van server:', response);
-            const newCustomers = response.customer;
-            this.customers.update((oldCustomers) => [...oldCustomers, newCustomers]);
+            this.customers.update((oldCustomers) => [...oldCustomers, response.customer]);
           },
           error: (err) => {
             console.error('Error while adding customer:', err);

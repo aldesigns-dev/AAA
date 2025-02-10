@@ -7,11 +7,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-import { Customer } from './customer.model';
+import { Customer, CustomerInput } from './customer.model';
 import { CustomersService } from './customers.service';
 import { DialogCustomerFormComponent } from '../dialogs/dialog-customer-form/dialog-customer-form.component';
 import { DialogModeEnum } from '../enums/dialog-mode.enum';
 import { DialogConfirmComponent } from '../dialogs/dialog-confirm/dialog-confirm.component';
+import { DialogCustomerData, DialogCustomerResponse } from '../dialogs/dialog-customer-form/dialog-customer-form-interface';
 
 @UntilDestroy()
 @Component({
@@ -67,17 +68,17 @@ export class CustomersComponent implements OnInit {
   }
 
   onAddCustomer() {
-    const dialogRef = this.dialog.open(DialogCustomerFormComponent, {
+    const dialogRef = this.dialog.open<DialogCustomerFormComponent, DialogCustomerData, DialogCustomerResponse>(DialogCustomerFormComponent, {
       data: { mode: DialogModeEnum.Add }
     });
     dialogRef.afterClosed().pipe(untilDestroyed(this)).subscribe((result) => {
       if (result) {
-        this.addCustomer(result);
+        this.addCustomer(result.customer);
       }
     });
   }
 
-  private addCustomer(newCustomer: Customer) {
+  private addCustomer(newCustomer: CustomerInput) {
     this.customersService.addCustomer(newCustomer).pipe(untilDestroyed(this)).subscribe({
       next: (response) => this.addCustomerToDataSource(response.customer),
       error: (err) => {
@@ -94,17 +95,17 @@ export class CustomersComponent implements OnInit {
 
   onUpdateCustomer(customerId: number) {
     const customer = this.dataSource.data.find(c => c.customer_id === customerId);
-    const dialogRef = this.dialog.open(DialogCustomerFormComponent, {
+    const dialogRef = this.dialog.open<DialogCustomerFormComponent, DialogCustomerData, DialogCustomerResponse>(DialogCustomerFormComponent, {
       data: { mode: DialogModeEnum.Update, customer }
     });
     dialogRef.afterClosed().pipe(untilDestroyed(this)).subscribe((result) => {
       if (result) {
-        this.updateCustomer(customerId, result);
+        this.updateCustomer(customerId, result.customer);
       }
     });
   }
 
-  private updateCustomer(customerId: number, updatedCustomer: any) {
+  private updateCustomer(customerId: number, updatedCustomer: CustomerInput) {
     this.customersService.updateCustomer(customerId, updatedCustomer).pipe(untilDestroyed(this)).subscribe({
       next: () => this.updateCustomerInDataSource(customerId, updatedCustomer),
       error: (err) => {
@@ -114,7 +115,7 @@ export class CustomersComponent implements OnInit {
     });
   }
 
-  private updateCustomerInDataSource(customerId: number, updatedCustomer: any) {
+  private updateCustomerInDataSource(customerId: number, updatedCustomer: CustomerInput) {
     this.dataSource.data = this.dataSource.data.map(c =>
       c.customer_id === customerId ? { ...c, ...updatedCustomer } : c
     );

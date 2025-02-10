@@ -2,7 +2,7 @@ import { inject, Injectable, signal } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { map, tap } from "rxjs";
 
-import { Breakdown } from "./breakdown.model";
+import { Breakdown, BreakdownInput } from "./breakdown.model";
 
 @Injectable({
   providedIn: 'root'
@@ -18,18 +18,13 @@ export class BreakdownsService {
       );
   }
 
-  addBreakdown(breakdownData: {moment_of_breakdown: Date, description: string, breakdown_id: number}) {
-    const newBreakdown = {
-      ...breakdownData,
-    };
-    console.log('Data verzonden naar server:', newBreakdown);
-    return this.httpClient.post<{ breakdown: Breakdown }>('http://localhost:3000/breakdowns', newBreakdown)
+  addBreakdown(breakdownData: BreakdownInput) {
+    return this.httpClient.post<{ breakdown: Breakdown }>('http://localhost:3000/breakdowns', breakdownData)
       .pipe(
         tap({
           next: (response) => {
             console.log('Response van server:', response);
-            const newBreakdowns = response.breakdown;
-            this.breakdowns.update((oldBreakdowns) => [...oldBreakdowns, newBreakdowns]);
+            this.breakdowns.update((oldBreakdowns) => [...oldBreakdowns, response.breakdown]);
           },
           error: (err) => {
             console.error('Error while adding customer:', err);
